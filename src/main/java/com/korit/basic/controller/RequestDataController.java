@@ -68,6 +68,7 @@ public class RequestDataController {
     return "이름 : " + requestBody.getName() + ", 나이 : " + requestBody.getAge();
   }
 
+  // validation을 실제로 수행하려면 @Valid가 매개변수에 설정 되어있어야 함
   @PostMapping("/validation")
   public String validation(
     @RequestBody @Valid Validation requestBody
