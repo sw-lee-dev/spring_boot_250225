@@ -8,6 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.korit.basic.dto.Validation;
+
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @RestController
 // http://127.0.0.1:8080/request-data/**
 @RequestMapping("/request-data")
@@ -59,25 +67,24 @@ public class RequestDataController {
   ) {
     return "이름 : " + requestBody.getName() + ", 나이 : " + requestBody.getAge();
   }
+
+  @PostMapping("/validation")
+  public String validation(
+    @RequestBody @Valid Validation requestBody
+  ) {
+    return requestBody.toString();
+  }
+
 }
 
 // DTO (Data Transfer Object)
 // - 데이터를 서로 다른 계층간에 전송하기 위한 객체
 // - 캡슐화가 되어있고 비즈니스 로직은 포함하지 않음
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 class RequestBodyDto {
   private String name;
   private Integer age;
-
-  public RequestBodyDto(String name, Integer age) {
-    this.name = name;
-    this.age = age;
-  }
-
-  public String getName() {
-    return this.name;
-  }
-
-  public Integer getAge() {
-    return this.age;
-  }
 }
