@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 // Cors 정책 : Cross Origin Resource Sharing으로 웹 브라우저의 스크립트로 출처가 서로 다른 곳으로 자원을 공유할 때 지정된 정책
 // - 출처(Origin) : 프로토콜, 호스트, 포트가 출처에 해당함
-// - 출처가 서로 다른 위치에 스크립트로 요청을 보내면 일반적으로 CORS 정책에 의해 막힘\
+// - 출처가 서로 다른 위치에 스크립트로 요청을 보내면 일반적으로 CORS 정책에 의해 막힘
 
 // @Configuration : 생성자나 메서드가 호출 시 Spring Bean으로 등록될 수 있도록 하는 어노테이션
 @Configuration
