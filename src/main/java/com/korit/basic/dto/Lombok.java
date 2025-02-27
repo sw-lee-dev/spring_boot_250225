@@ -12,7 +12,7 @@ import lombok.Setter;
 // - 대부분의 IDE는 기본적으로 Lombok 어노테이션에 대해 이해를 하지 못하기 때문에(에러로 받아들임) Lombok 추가 확장이 필요함
 
 // @Getter : getter 메서드 생성
-// @Setter : settre 메서드 생성
+// @Setter : setter 메서드 생성
 // @ToString : toString 메서드 생성 (필드명과 값을 문자열로 표현)
 // @NoArgsConstructor : 기본 생성자 생성 (빈 생성자)
 // @AllArgsConstructor : 모든 멤버변수를 매개변수로 받는 생성자 생성
