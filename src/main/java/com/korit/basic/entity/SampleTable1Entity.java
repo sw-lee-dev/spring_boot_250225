@@ -42,10 +42,10 @@ public class SampleTable1Entity {
   @Id
   private String pkColumn;
 
-  @Column
+  @Column(name="sample_column_1")
   private Integer sampleColumn1;
 
-  @Column
+  @Column(name="sample_column_2")
   private Boolean sampleColumn2;
 
 }
