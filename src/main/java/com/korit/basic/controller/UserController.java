@@ -7,18 +7,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.korit.basic.dto.PostUserRequestDto;
+import com.korit.basic.dto.ResponseDto;
+import com.korit.basic.service.UserService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
   
+  private final UserService userService;
+
   @PostMapping("")
   public ResponseEntity<ResponseDto> postUser(
     @RequestBody @Valid PostUserRequestDto requestBody
   ) {
-    return null;
+    ResponseEntity<ResponseDto> response = userService.postUser(requestBody);
+    return response;
   }
 
 }
