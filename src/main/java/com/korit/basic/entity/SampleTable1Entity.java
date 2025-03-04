@@ -38,7 +38,7 @@ public class SampleTable1Entity {
   @Column(name="pk_column", nullable=false, unique=true, length=20)
   // @Id :
   // - Entity의 멤버 변수 중 PRIMARY KEY로 지정할 멤버 변수에 사용하는 어노테이션
-  // - JPA에서는 @Id로 지정된 멤버 변수가 반드시 하나 이상 존재해야함
+  // - JPA에서는 @Id로 지정된 멤버 변수가 반드시 하나 이상 존재해야함 >> JpaRepository 인터페이스가 제너릭으로 받는 두가지 유형 중 두번째 매개타입이 해당 Entity의 기본키 타입이기 때문!
   @Id
   private String pkColumn;
 
