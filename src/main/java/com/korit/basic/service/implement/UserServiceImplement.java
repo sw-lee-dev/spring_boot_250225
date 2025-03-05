@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.korit.basic.dto.GetUserResponseDto;
 import com.korit.basic.dto.PostUserRequestDto;
 import com.korit.basic.dto.ResponseDto;
 import com.korit.basic.entity.UserEntity;
@@ -92,6 +93,22 @@ public class UserServiceImplement implements UserService {
     }
 
     return ResponseDto.success(HttpStatus.CREATED);
+  }
+
+  @Override
+  public ResponseEntity<? super GetUserResponseDto> getUser(String userId) {
+    
+    UserEntity userEntity = null;
+
+    try {
+      userEntity = userRepository.findByUserId(userId);
+      if (userEntity == null) return ResponseDto.noExistUser();
+    } catch(Exception exception) {
+      exception.printStackTrace();
+      return ResponseDto.databaseError();
+    }
+    
+    return GetUserResponseDto.success(userEntity);
   }
   
 }
