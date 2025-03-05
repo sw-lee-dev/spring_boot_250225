@@ -3,9 +3,13 @@ package com.korit.basic.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.korit.basic.entity.UserEntity;
+
+import jakarta.transaction.Transactional;
 
 // User 테이블에 접근할 리포지토리
 @Repository
@@ -47,6 +51,45 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
   List<UserEntity> findByUserAddressLike(String userAddress);
   // SELECT * FROM user WHERE user_address LIKE '?%';
   List<UserEntity> findByUserAddressStatingWith(String userAddress);
+
+  // - OrderBy : 정렬을 사용할 필드를 지정해서 Asc, Desc 시에 사용함
+  // SELECT * FROM user ORDER BY user_name DESC;
+  List<UserEntity> findByOrderByUserNameDesc();
+
+  // - deleteBy : 조건에 따른 레코드를 삭제할 때 사용함
+  // @Transactional 을 적용해야 사용 가능
+  @Transactional
+  void deleteByUserName(String userName);
+
+  // @Query : 
+  // - 쿼리 메서드 방식의 한계를 극복하기 위해 사용하는 방법
+  // - 복잡한 쿼리(서브쿼리, 조인, 그룹화 등)를 직접 작성하는 방법
+
+  // 1.JPQL (Java Persistance Query Language) :
+  // - 표준 SQL과 매우 흡사하지만 Entity 및 Entity의 필드로 쿼리를 작성
+  @Query(value = "SELECT u FROM user u WHERE u.userName = ?1 AND u.userTelNumber = ?2")
+  List<UserEntity> getUserList(String userName, String userTelNumber);
+
+  @Query(value = "SELECT u FROM user u WHERE u.userName = :name AND u.userTelNumber = :telNumber")
+  List<UserEntity> getUserList2(
+    @Param("name") String userName, 
+    @Param("telNumber") String userTelNumber
+  );
+
+  // 2.Native SQL :
+  // - 현재 RDBMS의 SQL 문법을 그대로 사용하는 방법
+  // - @Query의 nativeQuery 속성을 반드시 true로 지정
+  @Query(
+    value = 
+      "SELECT * " + 
+      "FROM user " + 
+      "WHERE user_name = :userName " + 
+      "AND user_tel_number = :userTelNumber ",
+    nativeQuery = true)
+  List<UserEntity> getUserList3(
+    @Param("userName") String userName,
+    @Param("userTelNumber") String userTelNumber
+  );
 }
 
 // Spring Data JPA >> document >> LEARN >> Reference DOC 확인

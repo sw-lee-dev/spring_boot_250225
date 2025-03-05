@@ -1,5 +1,8 @@
 package com.korit.basic.service.implement;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,37 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImplement implements UserService {
 
   private final UserRepository userRepository;
+
+  public void queryMethod() {
+    UserEntity userEntity = new UserEntity();
+
+    // save(엔터티-인스턴스) : 인스턴스를 레코드로 저장하는 메서드
+    // 만약 엔터티의 ID에 해당하는 데이터가 동일한 데이터가 테이블에 존재한다면 수정
+    // 만약 엔터티의 ID에 해당하는 데이터가 동일한 데이터가 테이블에 존재하지 않는다면 삽입
+    userRepository.save(userEntity);
+
+    // saveAll(엔터티 컬렉션) : 컬렉션으로 관리되어지는 엔터티 인스턴스를 모두 저장
+    List<UserEntity> entites = new ArrayList<>();
+    userRepository.saveAll(entites);
+
+    // findById(아이디 데이터) : 아이디를 기준으로 조회
+    // - 반환 타입이 optional 타입으로 반환되어 .get()를 써야하고 또한 존재하지 않는다면 에러가 터짐
+    // - 직접 쿼리 메서드를 작성하는 것이 편함
+    userEntity = userRepository.findById("아이디").get();
+
+    // findAll() : 전체 레코드를 조회
+    entites = userRepository.findAll();
+
+    // existsById(아이디 데이터) : 아이디를 기준으로 레코드 존재 여부 반환
+    boolean existed = userRepository.existsById("아이디");
+
+    // deleteById(아이디 데이터) : 아이디를 기준으로 레코드 삭제
+    userRepository.deleteById("아이디");
+    // delete(엔터티) : 해당 엔터티 레코드를 삭제
+    userRepository.delete(userEntity);
+    // deleteAll(엔터티 컬렉션) : 해당하는 엔터티 레코드 리스트를 삭제 (!매개변수를 안주면 전부 삭제!)
+    userRepository.deleteAll(entites);
+  }
 
   @Override
   public ResponseEntity<ResponseDto> postUser(PostUserRequestDto dto) {
@@ -56,7 +90,7 @@ public class UserServiceImplement implements UserService {
       exception.printStackTrace();
       return ResponseDto.databaseError();
     }
-    
+
     return ResponseDto.success(HttpStatus.CREATED);
   }
   
