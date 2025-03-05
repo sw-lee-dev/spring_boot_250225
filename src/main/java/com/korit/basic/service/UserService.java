@@ -10,5 +10,6 @@ public interface UserService {
   
   ResponseEntity<ResponseDto> postUser(PostUserRequestDto dto);
   ResponseEntity<? super GetUserResponseDto> getUser(String userId);
+  ResponseEntity<ResponseDto> deleteUser(String userId);
   
 }

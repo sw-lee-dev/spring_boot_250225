@@ -46,11 +46,11 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
   // SELECT * FROM user WHERE user_name = ? AND user_address = ?;
   List<UserEntity> findByUserNameAndUserAddress(String userName, String userAddress);
 
-  // - Like, NotLike, Containing, StatingWith, EndingWith : Like 연산에 사용함, 필드 뒤에 붙여서 사용함
+  // - Like, NotLike, Containing, StartingWith, EndingWith : Like 연산에 사용함, 필드 뒤에 붙여서 사용함
   // SELECT * FROM user WHERE user_address LIKE '%?%';
   List<UserEntity> findByUserAddressLike(String userAddress);
   // SELECT * FROM user WHERE user_address LIKE '?%';
-  List<UserEntity> findByUserAddressStatingWith(String userAddress);
+  List<UserEntity> findByUserAddressStartingWith(String userAddress);
 
   // - OrderBy : 정렬을 사용할 필드를 지정해서 Asc, Desc 시에 사용함
   // SELECT * FROM user ORDER BY user_name DESC;
