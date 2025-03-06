@@ -54,7 +54,8 @@ public class UserController {
     @PathVariable("userId") String userId,
     @RequestBody @Valid PatchUserRequestDto requestBody
   ) {
-    return null;
+    ResponseEntity<ResponseDto> response = userService.patchUser(userId, requestBody);
+    return response;
   }
 
   @DeleteMapping("/{userId}")

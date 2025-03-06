@@ -15,7 +15,6 @@ import com.korit.basic.dto.ResponseDto;
 import com.korit.basic.entity.UserEntity;
 import com.korit.basic.repository.UserRepository;
 import com.korit.basic.service.UserService;
-import com.mysql.cj.protocol.x.Ok;
 
 import lombok.RequiredArgsConstructor;
 
@@ -111,7 +110,6 @@ public class UserServiceImplement implements UserService {
     }
 
     return GetUserListResponseDto.success(userEntities);
-
   }
 
   @Override
@@ -137,8 +135,7 @@ public class UserServiceImplement implements UserService {
       UserEntity userEntity = userRepository.findByUserId(userId);
       if (userEntity == null) return ResponseDto.noExistUser();
 
-      userEntity.setUserName(dto.getUserName());
-      userEntity.setUserAddress(dto.getUserAddress());
+      userEntity.patch(dto);
       userRepository.save(userEntity);
 
     } catch(Exception exception) {
