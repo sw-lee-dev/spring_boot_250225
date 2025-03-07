@@ -9,6 +9,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -66,6 +67,35 @@ public class JwtProvider {
       .compact();
 
     return jwt;
+
+  }
+
+  // JWT 검증 메서드
+  public String validate(String jwt) {
+
+    // JWT 검증 결과로 반환 받는 페이로드(=클레임)가 저장될 변수
+    Claims claims = null;
+
+    // 비밀키 객체 생성작업
+    Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+
+    try {
+
+      claims = Jwts.parserBuilder()
+        // 열기 위한 열쇠를 만드는 행위
+        .setSigningKey(key)
+        .build()
+        // 실제 파싱
+        .parseClaimsJws(jwt)
+        // Body가 페이로드
+        .getBody();
+
+    } catch(Exception exception) {
+      exception.printStackTrace();
+      return null;
+    }
+
+    return claims.getSubject(); // setSubject()로 페이로드 작성자를 생성했기 때문
 
   }
 
