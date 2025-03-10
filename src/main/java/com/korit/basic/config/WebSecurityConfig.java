@@ -1,5 +1,7 @@
 package com.korit.basic.config;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -17,6 +21,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.korit.basic.filter.JwtAuthenticationFilter;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 // Spring Web 보안 설정
@@ -67,7 +74,7 @@ public class WebSecurityConfig {
       // CORS 정책 설정
       .cors(cors -> cors.configurationSource(configurationSource()))
 
-      // 인가 작업
+      // !!인가 작업 >> 흐름 잘 알아둘것(이해)
       // - 요청 URL의 패턴(자원)에 따라 인가가 필요한 작업인지 지정하는 설정 (자원에 대한 권한 지정)
       // - 1.모든 클라이언트가 접근할 수 있도록 허용
       // - 2.인증된 모든 클라이언트가 접근할 수 있도록 허용
@@ -83,6 +90,12 @@ public class WebSecurityConfig {
         // anyRequest() : 나머지 모든 요청에 대한 처리
         .anyRequest().authenticated()
       )
+
+      // 인증 및 인가 과정에서 발생한 예외를 직접 처리
+      .exceptionHandling(exception -> exception
+        .authenticationEntryPoint(new FailedAuthenticationEntryPoint())
+      )
+
       // 필터 등록
       // addFilterBefore(추가할 필터 인스턴스, 특정 필터 클래스) : 특정 필터 이전에 지정한 필터를 추가
       .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -112,4 +125,21 @@ public class WebSecurityConfig {
   
 }
 
-// .anyRequest().authenticated() >> 허용하지 않은 요청에 대해서는 인증 절차가 필요 >> 인증된 사용자로 JWT 발행 >> 보내려는 요청 Header에 Authorization 필드 값으로 Bearer JWT를 포함하여 전송
+// 인증 및 인가 실패 처리를 위한 커스텀 예외 처리 (AuthenticationEntryPoint 인터페이스 구현)
+class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+  @Override
+  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+      throws IOException, ServletException {
+
+    authException.printStackTrace();
+    response.setContentType("application/json;charset=UTF-8");
+    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    response.getWriter().write("{\"message\": \"인증 및 인가에 실패했습니다.\"}");
+
+  }
+
+}
+
+// 인증 절차가 필요 >> 인증된 사용자로 JWT 발행 >> 보내려는 요청 Header에 Authorization 필드 값으로 Bearer JWT를 포함하여 전송
+// .anyRequest().authenticated() >> 인가가 허용되지 않은 요청에 대해서는 인증이 필요함
