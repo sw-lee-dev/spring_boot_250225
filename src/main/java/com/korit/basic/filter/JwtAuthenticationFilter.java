@@ -67,6 +67,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
       // 4. 접근 주체의 권한(리스트 형태) 지정 (선택 사항)
       List<GrantedAuthority> roles = AuthorityUtils.NO_AUTHORITIES;
+
+      // 권한 규칙
+      // 1. 반드시 문자열이어야 함
+      // 2. 문자열은 "ROLE_" 로 시작해야 함
       // String role = userEntity.getRole();
       // List<GrantedAuthority> roles = new ArrayList<>();
       // roles.add(new SimpleGrantedAuthority(role));
